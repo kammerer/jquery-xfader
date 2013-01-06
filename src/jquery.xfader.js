@@ -13,17 +13,17 @@
 
     this.options = $.extend({}, default_options, options);
     this.animating = false;
-    this.$slides = $(target).find("li");
+    this.$views = $(target).find("li");
     this.$controls = $(this.options.controls_selector).find("li");
     this.$prev = $(this.options.prev_selector);
     this.$next = $(this.options.next_selector);
   }
 
   XFader.prototype.init = function() {
-    //this.$slides.parent().css({ 'position': 'relative' });
-    this.$slides.css({ 'position': 'absolute', 'top': 0, 'bottom': 0 });
-    this.$slides.first().nextAll().hide();
-    this.$slides.first().addClass('current');
+    //this.$views.parent().css({ 'position': 'relative' });
+    this.$views.css({ 'position': 'absolute', 'top': 0, 'bottom': 0 });
+    this.$views.first().nextAll().hide();
+    this.$views.first().addClass('current');
 
     if (! this.options.loop) {
       this.$prev.hide();
@@ -43,7 +43,7 @@
         }
 
         if (dir == "next") {
-          if (fader.current_slide().get(0) != fader.last_slide().get(0)) {
+          if (fader.current_view().get(0) != fader.last_view().get(0)) {
             fader.next();
           }
           else {
@@ -52,7 +52,7 @@
           }
         }
         else if (dir == "prev") {
-          if (fader.current_slide().get(0) != fader.first_slide().get(0)) {
+          if (fader.current_view().get(0) != fader.first_view().get(0)) {
             fader.prev();
           }
           else {
@@ -72,7 +72,7 @@
         fader.options.auto = false;
         event.preventDefault();
         if (! fader.animating)
-          fader.goto_slide(idx);
+          fader.goto_view(idx);
       });
     });
 
@@ -91,119 +91,119 @@
     });
   };
 
-  XFader.prototype.current_slide = function() {
-    return this.$slides.filter('.current');
+  XFader.prototype.current_view = function() {
+    return this.$views.filter('.current');
   };
 
-  XFader.prototype.first_slide = function() {
-    return this.$slides.first();
+  XFader.prototype.first_view = function() {
+    return this.$views.first();
   };
 
-  XFader.prototype.last_slide = function() {
-    return this.$slides.last();
+  XFader.prototype.last_view = function() {
+    return this.$views.last();
   };
 
-  XFader.prototype.next_slide = function() {
-    var $next_slide = this.current_slide().next();
-    if (this.options.loop && $next_slide.length == 0) {
-      $next_slide = this.first_slide();
+  XFader.prototype.next_view = function() {
+    var $next_view = this.current_view().next();
+    if (this.options.loop && $next_view.length == 0) {
+      $next_view = this.first_view();
     }
 
-    return $next_slide;
+    return $next_view;
   };
 
-  XFader.prototype.prev_slide = function() {
-    var $prev_slide = this.current_slide().prev();
-    if (this.options.loop && $prev_slide.length == 0) {
-      $prev_slide = this.last_slide();
+  XFader.prototype.prev_view = function() {
+    var $prev_view = this.current_view().prev();
+    if (this.options.loop && $prev_view.length == 0) {
+      $prev_view = this.last_view();
     }
 
-    return $prev_slide;
+    return $prev_view;
   };
 
   XFader.prototype.next = function() {
-    var $current_slide = this.current_slide();
-    var $next_slide = this.next_slide();
+    var $current_view = this.current_view();
+    var $next_view = this.next_view();
 
     var fader = this;
 
-    if ($next_slide.length > 0) {
+    if ($next_view.length > 0) {
       this.animating = true;
-      this.call_before_change_handler($current_slide.get(0));
+      this.call_before_change_handler($current_view.get(0));
 
-      $current_slide.animate({ opacity: 0 }, 500);
-      $next_slide.css('opacity', 0).show().animate({ opacity: 1 }, 500, function() {
+      $current_view.animate({ opacity: 0 }, 500);
+      $next_view.css('opacity', 0).show().animate({ opacity: 1 }, 500, function() {
         fader.$prev.show();
-        $current_slide.hide().removeClass('current');
-        $next_slide.addClass('current');
+        $current_view.hide().removeClass('current');
+        $next_view.addClass('current');
 
         fader.update_numeric_controls();
         fader.animating = false;
-        fader.call_change_handler($next_slide.get(0));
+        fader.call_change_handler($next_view.get(0));
       });
     }
     
-    if (! this.options.loop && $current_slide.nextAll().length < 2) {
+    if (! this.options.loop && $current_view.nextAll().length < 2) {
       fader.$next.hide();
     }
   };
 
   XFader.prototype.update_numeric_controls = function() {
-    $(this.$controls.removeClass('current')[this.current_slide().prevAll().length]).addClass('current');
+    $(this.$controls.removeClass('current')[this.current_view().prevAll().length]).addClass('current');
   };
 
   XFader.prototype.prev = function() {
-    var $current_slide = this.current_slide();
-    var $prev_slide = this.prev_slide();
+    var $current_view = this.current_view();
+    var $prev_view = this.prev_view();
 
     var fader = this;
 
-    if ($prev_slide.length > 0) {
+    if ($prev_view.length > 0) {
       this.animating = true;
-      this.call_before_change_handler($current_slide.get(0));
+      this.call_before_change_handler($current_view.get(0));
 
-      $current_slide.animate({ opacity: 0 }, 500);
-      $prev_slide.css('opacity', 0).show().animate({ opacity: 1 }, 500, function() {
+      $current_view.animate({ opacity: 0 }, 500);
+      $prev_view.css('opacity', 0).show().animate({ opacity: 1 }, 500, function() {
         fader.$next.show();
-        $current_slide.hide().removeClass('current');
-        $prev_slide.addClass('current');
+        $current_view.hide().removeClass('current');
+        $prev_view.addClass('current');
 
         fader.update_numeric_controls();
         fader.animating = false;
-        fader.call_change_handler($prev_slide.get(0));
+        fader.call_change_handler($prev_view.get(0));
       });
     }
 
-    if (! this.options.loop && $current_slide.prevAll().length < 2) {
+    if (! this.options.loop && $current_view.prevAll().length < 2) {
       fader.$prev.hide();
     }
   };
 
-  XFader.prototype.goto_slide = function(idx) {
-    var $current_slide = this.current_slide();
-    var $target_slide = $(this.$slides.get(idx));
+  XFader.prototype.goto_view = function(idx) {
+    var $current_view = this.current_view();
+    var $target_view = $(this.$views.get(idx));
 
-    if ($current_slide.get(0) == $target_slide.get(0))
+    if ($current_view.get(0) == $target_view.get(0))
       return;
 
     var fader = this;
 
     this.animating = true;
-    this.call_before_change_handler($current_slide.get(0));
+    this.call_before_change_handler($current_view.get(0));
 
-    $current_slide.animate({ opacity: 0 }, 500);
-    $target_slide.css('opacity', 0).show().animate({ opacity: 1 }, 500, function() {
-      fader.$slides.filter('.current').removeClass('current').hide();
-      $target_slide.addClass('current');
+    $current_view.animate({ opacity: 0 }, 500);
+    $target_view.css('opacity', 0).show().animate({ opacity: 1 }, 500, function() {
+      fader.$views.filter('.current').removeClass('current').hide();
+      $target_view.addClass('current');
 
-      if ($target_slide.nextAll().length == 0) {
+      if ($target_view.nextAll().length == 0) {
         fader.$next.hide();
       }
       else {
         fader.$next.show();
       }
 
-      if ($target_slide.prevAll().length == 0) {
+      if ($target_view.prevAll().length == 0) {
         fader.$prev.hide();
       }
       else {
@@ -212,19 +212,19 @@
 
       fader.update_numeric_controls();
       fader.animating = false;
-      fader.call_change_handler($target_slide.get(0));
+      fader.call_change_handler($target_view.get(0));
     });
   };
 
-  XFader.prototype.call_before_change_handler = function(slide) {
+  XFader.prototype.call_before_change_handler = function(view) {
     if (this.options.before_change) {
-      this.options.before_change.call(slide, this.$slides.index(slide));
+      this.options.before_change.call(view, this.$views.index(view));
     }
   };
 
-  XFader.prototype.call_change_handler = function(slide) {
+  XFader.prototype.call_change_handler = function(view) {
     if (this.options.change) {
-      this.options.change.call(slide, this.$slides.index(slide));
+      this.options.change.call(view, this.$views.index(view));
     }
   };
 
