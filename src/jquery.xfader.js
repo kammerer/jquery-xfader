@@ -7,8 +7,8 @@
       next_selector: "#fader-next",
       prev_selector: "#fader-prev",
       controls_selector: "#fader-controls",
-      beforeSlide: null,
-      slide: null
+      before_change: null,
+      change: null
     };
 
     this.options = $.extend({}, default_options, options);
@@ -129,7 +129,7 @@
 
     if ($next_slide.length > 0) {
       this.animating = true;
-      this.call_before_slide_handler($current_slide.get(0));
+      this.call_before_change_handler($current_slide.get(0));
 
       $current_slide.animate({ opacity: 0 }, 500);
       $next_slide.css('opacity', 0).show().animate({ opacity: 1 }, 500, function() {
@@ -139,7 +139,7 @@
 
         fader.update_numeric_controls();
         fader.animating = false;
-        fader.call_slide_handler($next_slide.get(0));
+        fader.call_change_handler($next_slide.get(0));
       });
     }
     
@@ -160,7 +160,7 @@
 
     if ($prev_slide.length > 0) {
       this.animating = true;
-      this.call_before_slide_handler($current_slide.get(0));
+      this.call_before_change_handler($current_slide.get(0));
 
       $current_slide.animate({ opacity: 0 }, 500);
       $prev_slide.css('opacity', 0).show().animate({ opacity: 1 }, 500, function() {
@@ -170,7 +170,7 @@
 
         fader.update_numeric_controls();
         fader.animating = false;
-        fader.call_slide_handler($prev_slide.get(0));
+        fader.call_change_handler($prev_slide.get(0));
       });
     }
 
@@ -189,7 +189,7 @@
     var fader = this;
 
     this.animating = true;
-    this.call_before_slide_handler($current_slide.get(0));
+    this.call_before_change_handler($current_slide.get(0));
 
     $current_slide.animate({ opacity: 0 }, 500);
     $target_slide.css('opacity', 0).show().animate({ opacity: 1 }, 500, function() {
@@ -212,19 +212,19 @@
 
       fader.update_numeric_controls();
       fader.animating = false;
-      fader.call_slide_handler($target_slide.get(0));
+      fader.call_change_handler($target_slide.get(0));
     });
   };
 
-  XFader.prototype.call_before_slide_handler = function(slide) {
-    if (this.options.beforeSlide) {
-      this.options.beforeSlide.call(slide, this.$slides.index(slide));
+  XFader.prototype.call_before_change_handler = function(slide) {
+    if (this.options.before_change) {
+      this.options.before_change.call(slide, this.$slides.index(slide));
     }
   };
 
-  XFader.prototype.call_slide_handler = function(slide) {
-    if (this.options.slide) {
-      this.options.slide.call(slide, this.$slides.index(slide));
+  XFader.prototype.call_change_handler = function(slide) {
+    if (this.options.change) {
+      this.options.change.call(slide, this.$slides.index(slide));
     }
   };
 
