@@ -1,3 +1,11 @@
+/*
+ * jquery-xfader v1.0.0
+ * Copyright 2011-2013 Tomasz Szymczyszyn
+ *
+ * This plug-in is dual licensed under the MIT and GPL licenses:
+ * http://www.opensource.org/licenses/mit-license.php
+ * http://www.gnu.org/licenses/gpl.html
+ */
 (function($) {
   function XFader(target, options) {
     var default_options = {
